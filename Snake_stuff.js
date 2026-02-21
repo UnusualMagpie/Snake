@@ -42,7 +42,7 @@ function moveball(target, pElement){ // Actually moving 1 segment
     //     console.log(target[0] + "," + target[1])
     // }
 
-    // random witchcraft start
+    // random math stuff (vectors) start
     let target_dir = [target[0] - ball_pos[0], target[1] - ball_pos[1]]
     let target_len = Math.sqrt(target_dir[0] ** 2 + target_dir[1] ** 2)
     if (target_len < HARD) return
@@ -55,9 +55,9 @@ function moveball(target, pElement){ // Actually moving 1 segment
     target_dir[1] /= Math.max(target_len, 0.01)
     target_dir[0] *= speed
     target_dir[1] *= speed
-    // random witchcraft end
+    // random math stuff end
 
-    pElement.setAttribute("cx", ball_pos[0] + target_dir[0])
+    pElement.setAttribute("cx", ball_pos[0] + target_dir[0]) // moving the ball
     pElement.setAttribute("cy", ball_pos[1] + target_dir[1])
 }
     
@@ -80,7 +80,7 @@ document.addEventListener("mousemove", function update_mouse(e) { // Find mouse 
     let point = svg.createSVGPoint()
     point.x = e.clientX
     point.y = e.clientY
-    point = point.matrixTransform(svg.getScreenCTM().inverse()) // convert it to svg position (smth actually useful)
+    point = point.matrixTransform(svg.getScreenCTM().inverse()) // convert it to svg position (something actually useful)
 
     mouse_pos[0] = point.x
     mouse_pos[1] = point.y

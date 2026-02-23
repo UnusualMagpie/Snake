@@ -2,7 +2,7 @@
 const SOFT = 5
 const HARD = 2
 const NUM_SEGMENTS = 50
-const HEAD_COLOR = "hsla(238, 100%, 5%, 1.00)"
+const HEAD_COLOR = "hsla(318, 100%, 5%, 1.00)"
 const TAIL_COLOR = "hsla(0, 0%, 100%, 1.00)"
 
 // Global variables
@@ -13,14 +13,14 @@ var redball = document.getElementById("redball");
 let clones = []
 let count = 0
 
-const mix = (n) => `color-mix(in hsl decreasing hue, ${HEAD_COLOR} ${100 * (1-n)}%, ${TAIL_COLOR} ${100 * n}%)`
+const mix = (n) => `color-mix(in hsl decreasing hue, ${HEAD_COLOR} ${100 * (1 - n)}%, ${TAIL_COLOR} ${100 * n}%)`
 redball.style.fill = mix(0)
 
 // Functions
 function cloneBall() { // creating 1 ball clone for snake segments
     const newball = redball.cloneNode()
     newball.removeAttribute("id")
-    newball.style.fill = mix((count+1)/(NUM_SEGMENTS+1))
+    newball.style.fill = mix((count + 1) / (NUM_SEGMENTS + 1))
     svg.appendChild(newball)
     return newball
 }

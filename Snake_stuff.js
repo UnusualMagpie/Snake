@@ -1,3 +1,5 @@
+// Google websockets to make it two player over LAN
+
 // Constants
 const SOFT = 5
 const HARD = 2
@@ -12,6 +14,7 @@ const svg = document.getElementById("main")
 var redball = document.getElementById("redball");
 let clones = []
 let count = 0
+let size = 1.68
 
 const mix = (n) => `color-mix(in hsl decreasing hue, ${HEAD_COLOR} ${100 * (1 - n)}%, ${TAIL_COLOR} ${100 * n}%)`
 redball.style.fill = mix(0)
@@ -22,6 +25,8 @@ function cloneBall() { // creating 1 ball clone for snake segments
     newball.removeAttribute("id")
     newball.style.fill = mix((count + 1) / (NUM_SEGMENTS + 1))
     svg.appendChild(newball)
+    newball.setAttribute("r", size)
+    size -= 0.02
     return newball
 }
 while (count <= NUM_SEGMENTS){ // Creating multiple ball clones

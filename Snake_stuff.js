@@ -1,9 +1,9 @@
 // Constants
 const SOFT = 5
 const HARD = 2
-const NUM_SEGMENTS = 10
-const HEAD_COLOR = "hsla(0, 100%, 50%, 1.00)"
-const TAIL_COLOR = "hsla(232, 100%, 50%, 1.00)"
+const NUM_SEGMENTS = 50
+const HEAD_COLOR = "hsla(238, 100%, 5%, 1.00)"
+const TAIL_COLOR = "hsla(0, 0%, 100%, 1.00)"
 
 // Global variables
 let i = 0

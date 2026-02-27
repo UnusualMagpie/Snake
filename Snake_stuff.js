@@ -3,38 +3,35 @@
 // Constants
 const SOFT = 5
 const HARD = 2
-const NUM_SEGMENTS = 50
-const HEAD_COLOR = "hsla(318, 100%, 5%, 1.00)"
-const TAIL_COLOR = "hsla(0, 0%, 100%, 1.00)"
+const EAT_DIST = 3
+const NUM_SEGMENTS = 10
+const HEAD_COLOR = "rgb(0, 10, 26)"
+const TAIL_COLOR = "rgb(0, 0, 0)"
+const SVG_SCALE = 198
+const TAIL_LEN = 50
+const SIZE_REDUCTION = 0.02
+const SIZE_MIN = 0.1
 
 // Global variables
 let i = 0
 let mouse_pos = [0, 0]
 const svg = document.getElementById("main")
-var redball = document.getElementById("redball");
+var head = document.getElementById("head");
 let clones = []
-let count = 0
-let size = 1.68
+let snake_len = 0
+let size = 1.95
+let food = document.getElementById("food")
 
 const mix = (n) => `color-mix(in hsl decreasing hue, ${HEAD_COLOR} ${100 * (1 - n)}%, ${TAIL_COLOR} ${100 * n}%)`
-redball.style.fill = mix(0)
+head.style.fill = mix(0)
+
+
 
 // Functions
-function cloneBall() { // creating 1 ball clone for snake segments
-    const newball = redball.cloneNode()
-    newball.removeAttribute("id")
-    newball.style.fill = mix((count + 1) / (NUM_SEGMENTS + 1))
-    svg.appendChild(newball)
-    newball.setAttribute("r", size)
-    size -= 0.02
-    return newball
-}
-while (count <= NUM_SEGMENTS){ // Creating multiple ball clones
-    clones.push(cloneBall())
-    count += 1
-}
 
-
+//===================================================================
+// MATH FUNCTIONS
+//===================================================================
 
 function moveball(target, pElement){ // Actually moving 1 segment
     i += 1
@@ -66,20 +63,70 @@ function moveball(target, pElement){ // Actually moving 1 segment
     pElement.setAttribute("cy", ball_pos[1] + target_dir[1])
 }
     
-function all_move(){ // moving all the balls
-    moveball(mouse_pos, redball)
-    let target = [
-        redball.getAttribute("cx"),
-        redball.getAttribute("cy"),
-    ]
-    for(let i = 0; i < clones.length; i += 1) { // iterating through cone list to move clones
-        moveball(target, clones[i])
-        target = [
-            clones[i].getAttribute("cx"),
-            clones[i].getAttribute("cy"),
-        ]
+//============================================================================
+// Less Math Functions
+//============================================================================
+
+function cloneBall() { // creating 1 ball clone for snake segments
+    const newball = head.cloneNode()
+    newball.removeAttribute("id")
+    newball.style.fill = mix((snake_len + 1) / (NUM_SEGMENTS + 1))
+    svg.appendChild(newball)
+    
+    if (snake_len <= TAIL_LEN) {
+        newball.setAttribute("r", size)
+        if (size >= SIZE_MIN){
+            size -= SIZE_REDUCTION
+        }
+        clones.push(newball)
+    }
+    else {
+        clones.unshift(newball)
+    }
+    snake_len += 1
+    
+    return newball
+}
+while (snake_len <= NUM_SEGMENTS){ // Creating multiple ball clones
+    cloneBall()
+}
+
+
+
+
+
+function touch_food(pElement, pFood){
+    let ballx = Number(pElement.getAttribute("cx"))
+    let bally = Number(pElement.getAttribute("cy"))
+    let ball_pos = [ballx, bally]
+
+    let foodx = Number(pFood.getAttribute("cx"))
+    let foody = Number(pFood.getAttribute("cy"))
+    let food_pos = [foodx, foody]
+
+    let food_dir = [food_pos[0] - ball_pos[0], food_pos[1] - ball_pos[1]]
+    let food_len = Math.sqrt(food_dir[0] ** 2 + food_dir[1] ** 2)
+    if (food_len < EAT_DIST){
+        return true
+    }
+    
+}
+
+
+function collect_food(){
+
+    let randx = Math.random() * SVG_SCALE
+    let randy = Math.random() * SVG_SCALE
+
+    if (touch_food(head, food)){
+        
+        cloneBall()
+        food.setAttribute("cx", randx)
+        food.setAttribute("cy", randy)
+
     }
 }
+
 
 document.addEventListener("mousemove", function update_mouse(e) { // Find mouse position on move
     let point = svg.createSVGPoint()
@@ -91,9 +138,32 @@ document.addEventListener("mousemove", function update_mouse(e) { // Find mouse 
     mouse_pos[1] = point.y
 })
 
+//=========================================================================================
+// the bit where things happen
+//==========================================================================================
+
+
+function make_it_go(){ // moving all the balls
+    moveball(mouse_pos, head)
+    collect_food()
+    let target = [
+        head.getAttribute("cx"),
+        head.getAttribute("cy"),
+    ]
+    for(let i = 0; i < clones.length; i += 1) { // iterating through cone list to move clones
+        moveball(target, clones[i])
+        target = [
+            clones[i].getAttribute("cx"),
+            clones[i].getAttribute("cy"),
+        ]
+    }
+}
+
+
 // Main program
 
-timer = setInterval(all_move, 2) // Move every 2 milliseconds
+timer = setInterval(make_it_go, 2) // Move every 2 milliseconds
 
   
+
 

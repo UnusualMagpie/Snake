@@ -2,4 +2,4 @@ Wanted to try messing around with boids and Javascript/HTML, realised pretty qui
 
 Been told by several people that I should try making snake (the game) with this, so the boids idea might be on hold for a while as I give that a go.
 
-UPDATE: Currently on hold and very broken, will come back when I have more time
+UPDATE: Currently on hold, will come back when I have more time
